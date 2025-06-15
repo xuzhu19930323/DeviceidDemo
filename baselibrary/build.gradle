@@ -9,7 +9,7 @@ if (isRelease) {
 }
 apply plugin: 'org.jetbrains.kotlin.android'
 apply plugin: 'maven-publish'
-apply plugin: 'signing'
+//apply plugin: 'signing'
 
 android {
     compileSdkVersion androidID.compileSdkVersion
@@ -80,7 +80,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.qiandai.core' // 你的组织ID
                 artifactId = 'baselibrary' // 库的名称
-                version = '1.0.0' // 版本号
+                version = 'V1.0.2' // 版本号
 
                 // 可选：添加源码和Javadoc
                 artifact sourcesJar
@@ -119,22 +119,22 @@ afterEvaluate {
             }
         }
 
-        repositories {
-            maven {
-                url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                credentials {
-                    username = '15879015478@163.com'
-                    password = 'huang19930323'
-                }
-            }
-
-        }
+//        repositories {
+//            maven {
+//                url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+//                credentials {
+//                    username = '15879015478@163.com'
+//                    password = 'huang19930323'
+//                }
+//            }
+//
+//        }
     }
 }
 
-signing {
-    sign publishing.publications
-}
+//signing {
+//    sign publishing.publications
+//}
 
 // 创建源码Jar任务
 tasks.register('sourcesJar', Jar) {
