@@ -1,0 +1,106 @@
+//plugins {
+//    id 'com.android.library'
+//    id 'org.jetbrains.kotlin.android' // 如果使用Kotlin,这个需要加上
+//}
+if (isRelease) {
+    apply plugin: 'com.android.library'
+} else {
+    apply plugin: 'com.android.application'
+}
+apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'maven-publish'
+
+android {
+    compileSdkVersion androidID.compileSdkVersion
+
+    defaultConfig {
+        if (isRelease) {
+            applicationId appID.baselibraryId
+        }
+        minSdkVersion androidID.minSdkVersion
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    dependenciesID.each { k, v -> implementation v }
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
+
+//---------- maven upload info -----------------------------------
+
+var signingKeyId = ""//签名的密钥后8位
+var signingPassword = ""//签名设置的密码
+var secretKeyRingFile = ""//生成的secring.gpg文件目录
+var ossrhUsername = ""//sonatype用户名
+var ossrhPassword = "" //sonatype密码
+
+
+//val localProperties: File = project.rootProject.file("local.properties")
+//
+//if (localProperties.exists()) {
+//    println("Found secret props file, loading props")
+//    def properties = Properties()
+//
+//    InputStreamReader(FileInputStream(localProperties), Charsets.UTF_8).use { reader ->
+//        properties.load(reader)
+//    }
+//    signingKeyId = properties.getProperty("signing.keyId")
+//    signingPassword = properties.getProperty("signing.password")
+//    secretKeyRingFile = properties.getProperty("signing.secretKeyRingFile")
+//    ossrhUsername = properties.getProperty("ossrhUsername")
+//    ossrhPassword = properties.getProperty("ossrhPassword")
+//
+//} else {
+//    println("No props file, loading env vars")
+//}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.qiandai.core' // 你的组织ID
+                artifactId = 'baselibrary' // 库的名称
+                version = '1.0.0' // 版本号
+
+                // 可选：添加源码和Javadoc
+                artifact sourcesJar
+//                artifact javadocJar
+            }
+        }
+
+        repositories {
+            maven {
+                url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                credentials {
+                    username = '15879015478@163.com'
+                    password = 'huang19930323'
+                }
+            }
+        }
+    }
+}
+
+// 创建源码Jar任务
+tasks.register('sourcesJar', Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}

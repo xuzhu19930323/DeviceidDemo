@@ -1,0 +1,26 @@
+
+ext {
+
+    androidID = [
+            kotlinVersion: '1.8.10',
+            compileSdkVersion: 33,
+            minSdkVersion: 24,
+            targetSdkVersion: 33,
+            versionCode: 1,
+            versionName: "1.0.0"
+    ]
+
+    appID = [
+            applicationId: "com.qiandai.zhudb",
+            baselibraryId: "com.qiandai.baselibrary"
+    ]
+
+    dependenciesID = [
+            appcompat: 'androidx.appcompat:appcompat:1.2.0',
+            ktx: 'androidx.core:core-ktx:1.9.0',
+            coroutinesCore: 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4',
+            coroutinesAndroid: 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+    ]
+
+    isRelease = true
+}
