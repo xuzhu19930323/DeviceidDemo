@@ -117,5 +117,6 @@ dependencies {
 
     if (isRelease) {
         implementation project(':baselibrary')
+        implementation project(':uilibrary')
     }
 }

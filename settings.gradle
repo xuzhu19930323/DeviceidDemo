@@ -18,3 +18,4 @@
 //include ':baselibrary'
 
 include ':app',':baselibrary'
+include ':uilibrary'

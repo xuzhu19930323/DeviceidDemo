@@ -1,0 +1,108 @@
+//plugins {
+//    id 'com.android.application'
+//    id 'org.jetbrains.kotlin.android'
+//    id 'maven-publish'
+//}
+
+if (isRelease) {
+    apply plugin: 'com.android.library'
+} else {
+    apply plugin: 'com.android.application'
+}
+apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'maven-publish'
+
+android {
+    compileSdkVersion androidID.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion androidID.minSdkVersion
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    dependenciesID.each { k, v -> implementation v }
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.qiandai.core' // 你的组织ID
+                artifactId = 'uilibrary' // 库的名称
+                version = 'V1.0.0' // 版本号
+
+                // 可选：添加源码和Javadoc
+                artifact sourcesJar
+
+                pom {
+                    // 构件名称，可以自定义
+                    name = 'uilibrary'
+                    // 构件描述
+                    description = 'android ui库'
+                    // 构件主页
+                    url = 'https://github.com/youth5201314/banner'
+                    // 许可证名称和地址
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    // 开发者信息
+                    developers {
+                        developer {
+                            name = 'huangzhao'
+                            email = '15879015478@163.com'
+                        }
+                    }
+                    // 版本控制仓库地址
+                    scm {
+                        url = 'https://github.com/xuzhu19930323/DeviceidDemo'
+                        connection = 'scm:git:github.com/xuzhu19930323/DeviceidDemo.git'
+//                        https://github.com/youth5201314/banner.git
+//                        https://github.com/xuzhu19930323/DeviceidDemo.git
+                        developerConnection = 'scm:git:https://github.com/xuzhu19930323/DeviceidDemo.git'
+                    }
+                }
+            }
+        }
+
+//        repositories {
+//            maven {
+//                url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+//                credentials {
+//                    username = '15879015478@163.com'
+//                    password = 'huang19930323'
+//                }
+//            }
+//
+//        }
+    }
+}
+
+// 创建源码Jar任务
+tasks.register('sourcesJar', Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
