@@ -9,14 +9,15 @@ if (isRelease) {
 }
 apply plugin: 'org.jetbrains.kotlin.android'
 apply plugin: 'maven-publish'
+apply plugin: 'signing'
 
 android {
     compileSdkVersion androidID.compileSdkVersion
 
     defaultConfig {
-        if (isRelease) {
-            applicationId appID.baselibraryId
-        }
+//        if (!isRelease) {
+//            applicationId appID.baselibraryId
+//        }
         minSdkVersion androidID.minSdkVersion
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -29,8 +30,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
         jvmTarget = '1.8'
@@ -46,11 +47,11 @@ dependencies {
 
 //---------- maven upload info -----------------------------------
 
-var signingKeyId = ""//签名的密钥后8位
-var signingPassword = ""//签名设置的密码
-var secretKeyRingFile = ""//生成的secring.gpg文件目录
-var ossrhUsername = ""//sonatype用户名
-var ossrhPassword = "" //sonatype密码
+//var signingKeyId = ""//签名的密钥后8位
+//var signingPassword = ""//签名设置的密码
+//var secretKeyRingFile = ""//生成的secring.gpg文件目录
+//var ossrhUsername = ""//sonatype用户名
+//var ossrhPassword = "" //sonatype密码
 
 
 //val localProperties: File = project.rootProject.file("local.properties")
@@ -84,6 +85,37 @@ afterEvaluate {
                 // 可选：添加源码和Javadoc
                 artifact sourcesJar
 //                artifact javadocJar
+
+                pom {
+                    // 构件名称，可以自定义
+                    name = 'baselibrary'
+                    // 构件描述
+                    description = 'android base库'
+                    // 构件主页
+                    url = 'https://github.com/youth5201314/banner'
+                    // 许可证名称和地址
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    // 开发者信息
+                    developers {
+                        developer {
+                            name = 'huangzhao'
+                            email = '15879015478@163.com'
+                        }
+                    }
+                    // 版本控制仓库地址
+                    scm {
+                        url = 'https://github.com/xuzhu19930323/DeviceidDemo'
+                        connection = 'scm:git:github.com/xuzhu19930323/DeviceidDemo.git'
+//                        https://github.com/youth5201314/banner.git
+//                        https://github.com/xuzhu19930323/DeviceidDemo.git
+                        developerConnection = 'scm:git:https://github.com/xuzhu19930323/DeviceidDemo.git'
+                    }
+                }
             }
         }
 
@@ -95,8 +127,13 @@ afterEvaluate {
                     password = 'huang19930323'
                 }
             }
+
         }
     }
+}
+
+signing {
+    sign publishing.publications
 }
 
 // 创建源码Jar任务
